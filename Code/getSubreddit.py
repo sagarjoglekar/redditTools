@@ -1,4 +1,7 @@
-def getThread(url,threadId,dDir):
+import json
+import requests as rq 
+
+def getThread(url):
 	session_headers = {
 	'Host': 'www.reddit.com',
 	'Connection': 'keep-alive',
@@ -15,18 +18,85 @@ def getThread(url,threadId,dDir):
 	client = rq.session()
 	resp = client.get(url , headers=session_headers)
 	if resp.status_code == 200:
-		with open(dDir+threadId+".json" , 'wb') as f:
-			f.write(resp.content)
-		return dDir+threadId+".json"
-
+		json_data = json.loads(resp.text)
+		return json_data
 	else:
-		print "Failed to get the thread"
+		print "Failed to get page"
 		return None
 
+def writeJson(fileName , dictionary):
+	print "Saving " + fileName
+	with open(fileName,'wb') as f:
+		json.dump(dictionary,f)
 
+def getSubreddit(baseURL , baseString , destinationDirectry):
+	start = 1
+	firstURL = baseURL + ".json"
+	firstJson = getThread(firstURL)
+
+	nxt = firstJson['data']['after']
+	firstFile = destinationDirectry + baseString + str(start) +".json"
+	start+=1
+	writeJson(firstFile,firstJson)
+	
+	while nxt != None:
+		nextUrl = baseURL + ".json" + "?after=" + nxt
+		nextJson = getThread(nextUrl)
+		print "Saving page %d"%(start)
+		nxt = nextJson['data']['after']
+		nextFile = destinationDirectry + baseString + str(start) +".json"
+		start+=1
+		writeJson(nextFile,nextJson)
+
+def getSubredditByCount(baseURL , baseString , destinationDirectry):
+	start = 1
+	firstURL = baseURL + ".json" + "?t=all"
+	firstJson = getThread(firstURL)
+
+	nxt = firstJson['data']['after']
+	firstFile = destinationDirectry + baseString + str(start) +".json"
+	start+=1
+	count = 25
+	writeJson(firstFile,firstJson)
+	
+	while nxt != None:
+		nextUrl = baseURL + ".json" + "?t=all&count=" + str(count) + "&after=" + nxt
+		print nextUrl
+		nextJson = getThread(nextUrl)
+		print "Saving page %d"%(start)
+		nxt = nextJson['data']['after']
+		nextFile = destinationDirectry + baseString + str(start) +".json"
+		start+=1
+		count+=25
+		writeJson(nextFile,nextJson)
+
+def getSearchByTimestamp(baseURL , baseString , destinationDirectry):
+	start = 1
+	firstURL = baseURL
+	firstJson = getThread(firstURL)
+
+	nxt = firstJson['data']['after']
+	firstFile = destinationDirectry + baseString + str(start) +".json"
+	start+=1
+	writeJson(firstFile,firstJson)
+	
+	while nxt != None:
+		nextUrl = baseURL + "&after=" + nxt
+		print nextUrl
+		nextJson = getThread(nextUrl)
+		print "Saving page %d"%(start)
+		nxt = nextJson['data']['after']
+		nextFile = destinationDirectry + baseString + str(start) +".json"
+		start+=1
+		writeJson(nextFile,nextJson)
 
 if __name__ == "__main__":
-	print "Testing"
-	subredditUrl = "https://www.reddit.com/r/thedonald/"
-	getThread(subredditUrl + ".json" , '' , '')
+
+	SaveDir = "/datasets_1/sagarj/IoPPN_collab/reddit_TheDonald/TheDonaldSub_more/"
+	subredditUrl = "https://www.reddit.com/r/The_Donald/top/"
+	# searchUrL = "https://www.reddit.com/r/thedonald/search.json?sort=new&q=timestamp%3A1354716928..1512483328&restrict_sr=on&syntax=cloudsearch&limit=100"
+	# getSubreddit(subredditUrl , "TheDonald_", SaveDir)
+	getSubredditByCount(subredditUrl , "TheDonald_", SaveDir)
+	# getSearchByTimestamp(searchUrL , "TheDonald_", SaveDir)
+
 

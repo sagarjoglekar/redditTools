@@ -6,7 +6,7 @@ import pickle as pkl
 import requests as rq 
 
 threadDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_threads/"
-graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_graphs_complete/"
+graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_graphs_complete_revised/"
 #uncomment this to run test mode
 # __name__ = "Test"
 
@@ -40,16 +40,18 @@ def getAffects(text):
 def sanitizeText(text):
     return text.encode('utf8').replace('\n', '').replace('\r', '')
 
-def parseChildren(jsonDict , graph , permUrl):
+
+def parseChildren(jsonDict , graph , permUrl , motherDepthOffset):
     if jsonDict['kind'] == 'more':
         print "Need Deeper Probing !!!!!! "
         deepterThreadId = jsonDict['data']['parent_id'].split('_')[1]
+        offsetDepth = motherDepthOffset + jsonDict['data']['depth']+1
         print deepterThreadId
         getUrl = permUrl+deepterThreadId+"/.json"
         print "Getting Nested Thread from : " + getUrl
         deeperDict = getSubThread(getUrl)
         if deeperDict != None:
-            graph = parseRedditJsonConvTree(deeperDict,graph)
+            graph = parseRedditJsonConvTree(deeperDict,graph,offsetDepth)
             return
         else:
             print "Silently Returning"
@@ -58,17 +60,17 @@ def parseChildren(jsonDict , graph , permUrl):
     data = jsonDict['data']
     affects = getAffects(sanitizeText(data['body']))
     # print data['name']
-    propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : sanitizeText(data['body']) , 'depth' : data['depth'] , 'affects' : sum(affects.values()) }
+    propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : sanitizeText(data['body']) , 'depth' : (motherDepthOffset + data['depth'])-1 , 'affects' : sum(affects.values()) }
     graph.add_node(data['name'] , propertyDict )
     graph.add_edge(data['name'], data['parent_id'] , weight=1 )
     if data['replies'] != '':
         if len(data['replies']['data']['children']) > 0:
             for k in data['replies']['data']['children']:
-                parseChildren(k, graph , permUrl)
+                parseChildren(k, graph , permUrl , motherDepthOffset )
     else:
         return
     
-def parseRedditJsonConvTree(jsonDict,motherGraph=None):
+def parseRedditJsonConvTree(jsonDict,motherGraph=None,DepthOffset=0):
     if motherGraph != None:
         replyGraph = motherGraph
         root = jsonDict[1]
@@ -82,16 +84,13 @@ def parseRedditJsonConvTree(jsonDict,motherGraph=None):
         replyGraph = nx.DiGraph()
         data = root['data']['children'][0]['data']
         affects = getAffects(data['selftext'])
-        propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : sanitizeText(data['selftext']) , 'depth' : -1, 'affects' : sum(affects.values())}
+        propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : sanitizeText(data['selftext']) , 'depth' : DepthOffset-1, 'affects' : sum(affects.values())}
         replyGraph.add_node(data['name'] , propertyDict )
     
     if len(jsonDict[1]['data']['children']) > 0:
         for k in jsonDict[1]['data']['children']:
-            parseChildren(k , replyGraph , url)
+            parseChildren(k , replyGraph , url , DepthOffset)
     return replyGraph
-    
-    
-    
 
 
 if __name__ == "__main__":
