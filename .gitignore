@@ -1,2 +1,6 @@
 Code/redditThreadCrawl.pyc
 Data
+makeReplyGraphs.pyc
+redditGraphTools.pyc
+redditThreadCrawl.pyc
+nohup.out
