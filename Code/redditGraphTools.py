@@ -4,6 +4,10 @@ import os
 import pickle as pkl
 import requests as rq 
 
+import sys
+#increase recursion limit, dangerous step, comment out if not sure about the computer's stack size
+sys.setrecursionlimit(2000)
+
 def getThread(url,threadId,dDir):
     session_headers = {
     'Host': 'www.reddit.com',
@@ -21,14 +25,14 @@ def getThread(url,threadId,dDir):
     client = rq.session()
     resp = client.get(url , headers=session_headers)
     if resp.status_code == 200:
-        with open(dDir+threadId+".json" , 'wb') as f:
-            f.write(resp.content)
+        # with open(dDir+threadId+".json" , 'wb') as f:
+        #     f.write(resp.content)
         json_data = json.loads(resp.text)
         return json_data
 
     else:
         print "Failed to get the thread"
-        return
+        return None
 
 
 def getSubThread(url):
@@ -69,6 +73,9 @@ def parseChildren(jsonDict , graph , permUrl , motherDepthOffset):
         print deepterThreadId
         offsetDepth = motherDepthOffset + jsonDict['data']['depth']+1
         print offsetDepth
+        #Return if the recusion goes beyond 200 depth
+        if offsetDepth > 200:
+            return
         getUrl = permUrl +".json"
         print "Getting Nested Thread from : " + getUrl
         deeperDict = getSubThread(getUrl)
@@ -99,11 +106,13 @@ def parseRedditJsonConvTree(jsonDict,motherGraph=None,DepthOffset=0):
         root = jsonDict[1]
         perma = root['data']['children'][0]['data']['permalink']
         url = "http://www.reddit.com"+perma
+        print url
 
     else:
         root = jsonDict[0]
         perma = root['data']['children'][0]['data']['permalink']
         url = "http://www.reddit.com"+perma
+        print url
         replyGraph = nx.DiGraph()
         data = root['data']['children'][0]['data']
         affects = getAffects(data['selftext'])

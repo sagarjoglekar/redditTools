@@ -42,6 +42,8 @@ def getSubreddit(baseURL , baseString , destinationDirectry):
 	while nxt != None:
 		nextUrl = baseURL + ".json" + "?after=" + nxt
 		nextJson = getThread(nextUrl)
+		if nextJson == None:
+			continue
 		print "Saving page %d"%(start)
 		nxt = nextJson['data']['after']
 		nextFile = destinationDirectry + baseString + str(start) +".json"
@@ -63,6 +65,8 @@ def getSubredditByCount(baseURL , baseString , destinationDirectry):
 		nextUrl = baseURL + ".json" + "?t=all&count=" + str(count) + "&after=" + nxt
 		print nextUrl
 		nextJson = getThread(nextUrl)
+		if nextJson == None:
+			continue
 		print "Saving page %d"%(start)
 		nxt = nextJson['data']['after']
 		nextFile = destinationDirectry + baseString + str(start) +".json"
@@ -84,6 +88,8 @@ def getSearchByTimestamp(baseURL , baseString , destinationDirectry):
 		nextUrl = baseURL + "&after=" + nxt
 		print nextUrl
 		nextJson = getThread(nextUrl)
+		if nextJson == None:
+			continue
 		print "Saving page %d"%(start)
 		nxt = nextJson['data']['after']
 		nextFile = destinationDirectry + baseString + str(start) +".json"
@@ -92,11 +98,11 @@ def getSearchByTimestamp(baseURL , baseString , destinationDirectry):
 
 if __name__ == "__main__":
 
-	SaveDir = "/datasets_1/sagarj/IoPPN_collab/reddit_TheDonald/TheDonaldSub_more/"
-	subredditUrl = "https://www.reddit.com/r/The_Donald/top/"
+	SaveDir = "/datasets_1/sagarj/IoPPN_collab/reddit_CMV/CMV_sub/"
+	subredditUrl = "https://www.reddit.com/r/changemyview/top/"
 	# searchUrL = "https://www.reddit.com/r/thedonald/search.json?sort=new&q=timestamp%3A1354716928..1512483328&restrict_sr=on&syntax=cloudsearch&limit=100"
 	# getSubreddit(subredditUrl , "TheDonald_", SaveDir)
-	getSubredditByCount(subredditUrl , "TheDonald_", SaveDir)
+	getSubredditByCount(subredditUrl , "CMV_", SaveDir)
 	# getSearchByTimestamp(searchUrL , "TheDonald_", SaveDir)
 
 
