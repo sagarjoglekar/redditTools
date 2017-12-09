@@ -1,4 +1,4 @@
-
+from redditCrawler import redditCrawler
 import networkx as nx
 import json
 import os 
@@ -20,18 +20,19 @@ if __name__ == "__main__":
     nxGraphDict = {}
 
     for thread in conversations:
+        crawler = redditCrawler(15,300)
         path = threadDir + thread
         tId = thread.split('.')[0]
         jsDict = json.load(open(path,'rb'))
         print path
         # print jsDict
-        graph = parseRedditJsonConvTree(jsDict)
+        graph = crawler.parseRedditJsonConvTree(jsDict)
         # nx.write_gexf(graph, graphDir + str(tId) + ".gexf")
         nxGraphDict[tId] = graph
 
     print "Created %d Graphs"%(len(nxGraphDict.keys()))
 
-    finalFile = graphDir + "SW_morethan10_deeper_replygraphs_v2.pkl"
+    finalFile = graphDir + "SW_morethan10_deeper_replygraphs_v3.pkl"
     with open(finalFile,'wb') as f:
         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
 
