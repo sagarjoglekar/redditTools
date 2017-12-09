@@ -5,8 +5,8 @@ import networkx as nx
 import pickle as pkl
 
 if __name__ == "__main__":
-	subredditDir =  "/datasets_1/sagarj/IoPPN_collab/reddit_pol/politics_sub_FP/"
-	graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_pol/reddit_pol_FP_graph/"
+	subredditDir =  "/datasets_1/sagarj/IoPPN_collab/reddit_TheDonald/TheDonaldSub_more/"
+	graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_TheDonald/theDonald_graph/"
 	URL = "https://www.reddit.com"
 	
 	pageFiles = os.listdir(subredditDir)
@@ -36,7 +36,7 @@ if __name__ == "__main__":
 	        # tempGraphFile = graphDir + tId + ".gpickle"
 	        # nx.write_gpickle(nxGraphDict[tId], tempGraphFile)
 		print "Created %d Graphs"%(len(nxGraphDict.keys()))
-		finalFile = graphDir + "Pol_FP_replygraphs.pkl"
+		finalFile = graphDir + "TheDonald_replygraphs.pkl"
 		with open(finalFile,'wb') as f:
 			pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
 		print "Done Saving !!!"
