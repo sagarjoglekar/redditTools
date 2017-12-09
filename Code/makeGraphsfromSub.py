@@ -2,6 +2,7 @@ from redditCrawler import redditCrawler
 import json
 import os
 import networkx as nx
+import pickle as pkl
 
 if __name__ == "__main__":
 	subredditDir =  "/datasets_1/sagarj/IoPPN_collab/reddit_pol/politics_sub_FP/"
@@ -32,10 +33,10 @@ if __name__ == "__main__":
 			print " Saving Graphs "
 			nxGraphDict[tId] = graph
 			print "Got %d Graphs now "%(len(nxGraphDict.keys()))
-	        tempGraphFile = graphDir + tId + ".gpickle"
-	        nx.write_gpickle(nxGraphDict[tId], tempGraphFile)
-	print "Created %d Graphs"%(len(nxGraphDict.keys()))
-	finalFile = graphDir + "Pol_FP_replygraphs.pkl"
-	with open(finalFile,'wb') as f:
-		pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
-	print "Done Saving !!!"
+	        # tempGraphFile = graphDir + tId + ".gpickle"
+	        # nx.write_gpickle(nxGraphDict[tId], tempGraphFile)
+		print "Created %d Graphs"%(len(nxGraphDict.keys()))
+		finalFile = graphDir + "Pol_FP_replygraphs.pkl"
+		with open(finalFile,'wb') as f:
+			pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
+		print "Done Saving !!!"
