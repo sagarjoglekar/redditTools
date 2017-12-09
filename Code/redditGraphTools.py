@@ -74,7 +74,8 @@ def parseChildren(jsonDict , graph , permUrl , motherDepthOffset):
         offsetDepth = motherDepthOffset + jsonDict['data']['depth']+1
         print offsetDepth
         #Return if the recusion goes beyond 200 depth
-        if offsetDepth > 200:
+        if offsetDepth > 50:
+            print "Returning as conversation depth is beyond what is Set as Limit!! "
             return
         getUrl = permUrl +".json"
         print "Getting Nested Thread from : " + getUrl
@@ -106,13 +107,13 @@ def parseRedditJsonConvTree(jsonDict,motherGraph=None,DepthOffset=0):
         root = jsonDict[1]
         perma = root['data']['children'][0]['data']['permalink']
         url = "http://www.reddit.com"+perma
-        print url
+        # print url.encode("utf-16")
 
     else:
         root = jsonDict[0]
         perma = root['data']['children'][0]['data']['permalink']
         url = "http://www.reddit.com"+perma
-        print url
+        # print url
         replyGraph = nx.DiGraph()
         data = root['data']['children'][0]['data']
         affects = getAffects(data['selftext'])

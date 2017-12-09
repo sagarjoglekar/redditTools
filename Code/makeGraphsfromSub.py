@@ -1,4 +1,4 @@
-from redditGraphTools import *
+from redditCrawler import redditCrawler
 import json
 import os
 import networkx as nx
@@ -17,16 +17,17 @@ if __name__ == "__main__":
 		
 		postList = posts['data']['children']
 		for thread in postList:
+			crawler = redditCrawler(15,300)
 			tId = thread['data']['id']
 			print "Reading %s"%tId
 			perma = thread['data']['permalink']
 			tUrl = URL + perma +".json" 
 			jsDict = {}
-			jsDict = getThread(tUrl,tId,graphDir)
+			jsDict = crawler.getThread(tUrl,tId,graphDir,True)
 			if jsDict == None:
 				continue
 			print "Saving %s at %s"%(tId,graphDir)
-			graph = parseRedditJsonConvTree(jsDict)
+			graph = crawler.parseRedditJsonConvTree(jsDict)
 			print type(graph)
 			print " Saving Graphs "
 			nxGraphDict[tId] = graph

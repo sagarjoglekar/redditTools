@@ -98,11 +98,11 @@ def getSearchByTimestamp(baseURL , baseString , destinationDirectry):
 
 if __name__ == "__main__":
 
-	SaveDir = "/datasets_1/sagarj/IoPPN_collab/reddit_CMV/CMV_sub/"
-	subredditUrl = "https://www.reddit.com/r/changemyview/top/"
+	SaveDir = "/datasets_1/sagarj/IoPPN_collab/reddit_pol/politics_sub_FP/"
+	subredditUrl = "https://www.reddit.com/r/politics/"
 	# searchUrL = "https://www.reddit.com/r/thedonald/search.json?sort=new&q=timestamp%3A1354716928..1512483328&restrict_sr=on&syntax=cloudsearch&limit=100"
 	# getSubreddit(subredditUrl , "TheDonald_", SaveDir)
-	getSubredditByCount(subredditUrl , "CMV_", SaveDir)
+	getSubredditByCount(subredditUrl , "Pol_", SaveDir)
 	# getSearchByTimestamp(searchUrL , "TheDonald_", SaveDir)
 
 

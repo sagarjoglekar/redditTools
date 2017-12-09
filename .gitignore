@@ -4,3 +4,5 @@ makeReplyGraphs.pyc
 redditGraphTools.pyc
 redditThreadCrawl.pyc
 nohup.out
+SWGraph.op
+redditCrawler.pyc

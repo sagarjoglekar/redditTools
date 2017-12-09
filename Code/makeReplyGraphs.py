@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     print "Created %d Graphs"%(len(nxGraphDict.keys()))
 
-    finalFile = graphDir + "SW_morethan10_deeper_replygraphs.pkl"
+    finalFile = graphDir + "SW_morethan10_deeper_replygraphs_v2.pkl"
     with open(finalFile,'wb') as f:
         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
 
