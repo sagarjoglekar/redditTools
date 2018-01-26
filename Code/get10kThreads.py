@@ -2,9 +2,9 @@ import pandas as pd
 from redditThreadCrawl import getThread
 from time import sleep
 
-downloadDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_threads/"
+downloadDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_AllThreads/"
 
-dataFrame = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/filteredSuicideWatchV2.pkl"
+dataFrame = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/filteredSuicideWatch_All_valid.pkl"
 
 sleepTime = 0.2
 

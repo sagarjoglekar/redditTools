@@ -8,3 +8,12 @@ SWGraph.op
 redditCrawler.pyc
 SWReplygraphs.op
 Code/TheDonaldGraphs.op
+Notebooks/BpUserDict.pkl
+Notebooks/EmbeddingDictionary.pkl
+Notebooks/multipleBP.pkl
+Notebooks/SW_Alltext.mdl.expElogbeta.npy
+Notebooks/SW_Alltext.mdl
+Notebooks/SW_Alltext.mdl.id2word
+Notebooks/SW_Alltext.mdl.state
+Code/SWGraph.op
+Code/SWGraphs.op

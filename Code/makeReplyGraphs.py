@@ -4,10 +4,9 @@ import json
 import os 
 import pickle as pkl
 import requests as rq 
-from redditGraphTools import *
 
-threadDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_threads/"
-graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_morethan10_graphs_complete_revised/"
+threadDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_AllThreads/"
+graphDir = "/datasets_1/sagarj/IoPPN_collab/reddit_suicideWatch/SW_allValidThreads_graphs/"
 #uncomment this to run test mode
 # __name__ = "Test"
 
@@ -32,7 +31,7 @@ if __name__ == "__main__":
 
     print "Created %d Graphs"%(len(nxGraphDict.keys()))
 
-    finalFile = graphDir + "SW_morethan10_deeper_replygraphs_v3.pkl"
+    finalFile = graphDir + "SW_Allvalid_Graphs.pkl"
     with open(finalFile,'wb') as f:
         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
 
