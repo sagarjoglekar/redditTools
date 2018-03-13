@@ -7,7 +7,7 @@ import hashlib
 import sys
 
 class redditCrawler:
-	recursionDepth = 0
+	recursionDepth = -1
 	recursionLimit = 100
 	conversationDepth = 200
 	permaHashes = {}
@@ -77,11 +77,11 @@ class redditCrawler:
 
 	def parseChildren(self, jsonDict , graph , permUrl , motherDepthOffset):
 		if jsonDict['kind'] == 'more':
-			print "Need Deeper Probing!!!!!! at level%d"%self.recursionDepth
 			deepterThreadId = jsonDict['data']['parent_id'].split('_')[1]
 			print " Thread id :" + deepterThreadId
-			offsetDepth = motherDepthOffset + jsonDict['data']['depth']+1
-			print offsetDepth
+			offsetDepth = motherDepthOffset + jsonDict['data']['depth']-1
+			print "Offset Depth : %d"%offsetDepth
+			print "Need Deeper Probing!!!!!! at level %d"%jsonDict['data']['depth']
 			#Return if the recusion goes beyond 200 depth
 			if offsetDepth > self.conversationDepth:
 				print "Returning as conversation depth (%d) is beyond what is Set as Limit!! "%offsetDepth
@@ -103,11 +103,12 @@ class redditCrawler:
 			else:
 				print "Silently Returning"
 				return
-			
+		
+		# print "Mother Offset: %d"%motherDepthOffset	
 		data = jsonDict['data']
 		affects = self.getAffects(self.sanitizeText(data['body']))
 		# print data['name']
-		propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : self.sanitizeText(data['body']) ,'time': data['created_utc'] ,'depth' : (motherDepthOffset + data['depth'])-1 , 'affects' : sum(affects.values()) }
+		propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : self.sanitizeText(data['body']) ,'time': data['created_utc'] ,'depth' : (motherDepthOffset + data['depth']) , 'affects' : sum(affects.values()) }
 		if graph.has_node(data['name']):
 			print "Node exists!!!"
 		else:
@@ -126,6 +127,7 @@ class redditCrawler:
 		
 	def parseRedditJsonConvTree(self, jsonDict,motherGraph=None,DepthOffset=0):
 		if motherGraph != None:
+			print "Depth Offset : %d"%DepthOffset
 			self.postRecursion+=1
 			if self.postRecursion > self.recursionDepthLimit:
 				print "Returning as recursion depth (%d) is beyond what is Set as Limit!! "%self.postRecursion

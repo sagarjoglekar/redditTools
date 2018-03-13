@@ -17,3 +17,17 @@ Notebooks/SW_Alltext.mdl.id2word
 Notebooks/SW_Alltext.mdl.state
 Code/SWGraph.op
 Code/SWGraphs.op
+Notebooks/BL_allcorpus_model.expElogbeta.npy
+Notebooks/BL_allcorpus_model.state.sstats.npy
+Notebooks/SW_allcorpus_model.expElogbeta.npy
+Notebooks/LargestFP.gexf
+Notebooks/SW_allUsers.gexf
+Notebooks/BL_allcorpus_model.id2word
+Notebooks/SW_allcorpus_model.id2word
+Notebooks/BL_allcorpus_model
+Notebooks/BL_allcorpus_model.state
+Notebooks/SW_allcorpus_model.state
+Notebooks/suicideWatchText.csv
+Notebooks/RichCLubSWALL.pkl
+Notebooks/SW_Whole_EmbeddingDictionary.pkl
+Notebooks/SW_allcorpus_model

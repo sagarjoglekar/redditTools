@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     print "Created %d Graphs"%(len(nxGraphDict.keys()))
 
-    finalFile = graphDir + "SW_Allvalid_Graphs.pkl"
+    finalFile = graphDir + "SW_Allvalid_Graphs_Depth_fixed.pkl"
     with open(finalFile,'wb') as f:
         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
 
@@ -45,11 +45,12 @@ else:
     print "Running testmode"
     print "working with : " + test_graph
 
+    crawler = redditCrawler(15,300)
     jsDict = json.load(open(test_graph,'rb'))
 
-    graph = parseRedditJsonConvTree(jsDict)
+    graph = crawler.parseRedditJsonConvTree(jsDict)
 
-    print graph.nodes()
-    print graph.edges()
-    print nx.get_node_attributes(graph,'text')
+    # print graph.nodes(data=True)
+    # print graph.edges()
+    print nx.get_node_attributes(graph,'depth')
 

@@ -99,7 +99,7 @@ def getSubPostsById(baseURL , baseString , destinationDirectry):
 if __name__ == "__main__":
 
 	SaveDir = "/datasets_1/sagarj/IoPPN_collab/FrontPage/posts/"
-	subredditUrl = "https://www.reddit.com/r/FrontPage/"
+	subredditUrl = "https://www.reddit.com/"
 	getSubPostsById(subredditUrl , "FP_", SaveDir)
 
 
