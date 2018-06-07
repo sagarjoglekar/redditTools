@@ -2,6 +2,7 @@ Code/redditThreadCrawl.pyc
 Data
 reddit/
 *.pyc
+*.txt
 makeReplyGraphs.pyc
 redditGraphTools.pyc
 redditThreadCrawl.pyc
@@ -11,6 +12,7 @@ redditCrawler.pyc
 SWReplygraphs.op
 Code/TheDonaldGraphs.op
 Notebooks/BpUserDict.pkl
+*.config
 Notebooks/EmbeddingDictionary.pkl
 Notebooks/multipleBP.pkl
 Notebooks/SW_Alltext.mdl.expElogbeta.npy
