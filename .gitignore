@@ -1,5 +1,7 @@
 Code/redditThreadCrawl.pyc
 Data
+reddit/
+*.pyc
 makeReplyGraphs.pyc
 redditGraphTools.pyc
 redditThreadCrawl.pyc

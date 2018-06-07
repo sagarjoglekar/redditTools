@@ -1,0 +1,8 @@
+certifi==2018.4.16
+networkx==2.1
+pandas==0.23.0
+praw==5.4.0
+prawcore==0.14.0
+python-dateutil==2.7.3
+pytz==2018.4
+update-checker==0.16
