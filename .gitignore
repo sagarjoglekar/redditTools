@@ -1,3 +1,10 @@
+*.tar.gz
+*.pkl
+Notebooks/SavedGraphs/
+Notebooks/SavedObjs/
+Notebooks/TopicModels/
+Logs/
+Notebooks/.ipynb_checkpoints/
 Code/redditThreadCrawl.pyc
 Data
 reddit/

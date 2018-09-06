@@ -64,11 +64,11 @@ if __name__ == "__from__posts__":
 
 	postDir = "/datasets_1/sagarj/IoPPN_collab/FrontPage/posts/"
 	graphDir = "/datasets_1/sagarj/IoPPN_collab/FrontPage/graphs/"
-	graphFile = "frontPage_replygraphs_depth_fixed.pkl"
+	graphFile = "frontPage_replygraphs_50k.pkl"
 
 	nxGraphDict = {}
 	allPosts = getPosts(postDir)
-	posts = random.sample(allPosts,12000)
+	posts = random.sample(allPosts,50000)
 
 	for p in posts:
 		crawler = redditCrawler(50,300)
