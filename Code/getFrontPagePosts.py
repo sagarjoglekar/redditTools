@@ -1,7 +1,7 @@
 import json
 import requests as rq 
 import os
-
+#Utility to crawl posts from the front page. The utlility crawls listings and saves as json
 def getThread(url):
 	session_headers = {
 	'Host': 'www.reddit.com',
