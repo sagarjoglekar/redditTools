@@ -1,3 +1,4 @@
+*.gexf
 *.tar.gz
 *.pkl
 Notebooks/SavedGraphs/
