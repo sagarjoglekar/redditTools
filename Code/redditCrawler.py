@@ -12,7 +12,7 @@ class redditCrawler:
 	conversationDepth = 200
 	permaHashes = {}
 	def __init__(self,recursionLimit , convDepth=200):
-		print " Initialting reddit crawler for a thread !!"
+		print(" Initialting reddit crawler for a thread !!")
 		self.recursionDepthLimit = recursionLimit
 		self.conversationDepth = convDepth
 		self.postRecursion = 0
@@ -41,7 +41,7 @@ class redditCrawler:
 			return json_data
 
 		else:
-			print "Failed to get the thread"
+			print("Failed to get the thread")
 			return None
 
 
@@ -66,7 +66,7 @@ class redditCrawler:
 			return json_data
 
 		else:
-			print "Failed to get the thread"
+			print("Failed to get the thread")
 			return None
 
 	def getAffects(self, text):
@@ -78,30 +78,30 @@ class redditCrawler:
 	def parseChildren(self, jsonDict , graph , permUrl , motherDepthOffset):
 		if jsonDict['kind'] == 'more':
 			deepterThreadId = jsonDict['data']['parent_id'].split('_')[1]
-			print " Thread id :" + deepterThreadId
+			print (" Thread id :" , deepterThreadId)
 			offsetDepth = motherDepthOffset + jsonDict['data']['depth']-1
-			print "Offset Depth : %d"%offsetDepth
-			print "Need Deeper Probing!!!!!! at level %d"%jsonDict['data']['depth']
+			print ("Offset Depth : %d",offsetDepth)
+			print ("Need Deeper Probing!!!!!! at level %d",jsonDict['data']['depth'])
 			#Return if the recusion goes beyond 200 depth
 			if offsetDepth > self.conversationDepth:
-				print "Returning as conversation depth (%d) is beyond what is Set as Limit!! "%offsetDepth
+				print ("Returning as conversation depth (%d) is beyond what is Set as Limit!! ",offsetDepth)
 				return
 			getUrl = permUrl +".json"
 			
 			hash_object = hashlib.sha1(getUrl.encode('utf-8'))
 			hashlink = hash_object.hexdigest()
 			if hashlink in self.permaHashes:
-				print"The conv tree is already looked at Returning!!" 
+				print("The conv tree is already looked at Returning!!") 
 				return graph
 			else:
 				self.permaHashes[hashlink] = getUrl
-			print "Getting Nested Thread from : " + getUrl.encode('utf-8')
+			print ("Getting Nested Thread from : " + getUrl.encode('utf-8'))
 			deeperDict = self.getSubThread(getUrl)
 			if deeperDict != None:
 				graph = self.parseRedditJsonConvTree(deeperDict,graph,offsetDepth)
 				return
 			else:
-				print "Silently Returning"
+				print ("Silently Returning")
 				return
 		
 		# print "Mother Offset: %d"%motherDepthOffset	
@@ -110,12 +110,12 @@ class redditCrawler:
 		# print data['name']
 		propertyDict = {'author' : data['author'] , 'ups' : data['ups'] , 'downs' : data['downs'] , 'text' : self.sanitizeText(data['body']) ,'time': data['created_utc'] ,'depth' : (motherDepthOffset + data['depth']) , 'affects' : sum(affects.values()) }
 		if graph.has_node(data['name']):
-			print "Node exists!!!"
+			print ("Node exists!!!")
 		else:
 			graph.add_node(data['name'] , propertyDict )
 		
 		if graph.has_edge(data['name'], data['parent_id']):
-			print "Edge exists!!!"
+			print ("Edge exists!!!")
 		else:
 			graph.add_edge(data['name'], data['parent_id'] , weight=1 )
 		
@@ -127,10 +127,10 @@ class redditCrawler:
 		
 	def parseRedditJsonConvTree(self, jsonDict,motherGraph=None,DepthOffset=0):
 		if motherGraph != None:
-			print "Depth Offset : %d"%DepthOffset
+			print ("Depth Offset : %d" , DepthOffset)
 			self.postRecursion+=1
 			if self.postRecursion > self.recursionDepthLimit:
-				print "Returning as recursion depth (%d) is beyond what is Set as Limit!! "%self.postRecursion
+				print ("Returning as recursion depth (%d) is beyond what is Set as Limit!! ",self.postRecursion)
 				self.postRecursion = 0
 				return motherGraph
 			replyGraph = motherGraph
