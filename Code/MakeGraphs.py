@@ -8,11 +8,18 @@ import bz2
 import requests as rq
 import time
 import glob
+import argparse
+import sys
+
 
 dumpPath = '/10TBdrive/datashare/Reddit/submissions/'
 graphDir = '/10TBdrive/datashare/Reddit/graphs/'
 postDir = '/10TBdrive/datashare/Reddit/crawls/'
 graphFile = "January2017_atleast10comments.pkl"
+
+
+
+__name__ = '__curated__'
 
 def getSubmissionPermalinks(filePath , comments_Thresh = 20 , limit=None):
     import json
@@ -28,7 +35,7 @@ def getSubmissionPermalinks(filePath , comments_Thresh = 20 , limit=None):
     else:
         print ("Invalid file type")
     count = 0
-    returnData = []
+    returnData = dict()
     print("=============Parsing============")
     st = time.time()
     
@@ -38,7 +45,7 @@ def getSubmissionPermalinks(filePath , comments_Thresh = 20 , limit=None):
             if (limit!=None and count > limit):
                 return returnData
             try:
-                returnData.append(lineData['permalink'])
+                returnData[lineData['id']] = lineData['permalink']
             except:
                 print("Permalink not found, moving on!")
         if count%100000 == 0:
@@ -54,17 +61,63 @@ def getPostDumps(path):
         paths += glob.glob(path+'/*.xz')
         return paths
 
+
 if __name__ == "__main__":
         print ("Creating graph from posts")
         URL = "https://www.reddit.com"
-	
+        # nxGraphDict = {}
         dumpFiles = getPostDumps(dumpPath)
         print(dumpFiles)
         postPermas = getSubmissionPermalinks(dumpFiles[0],comments_Thresh= 10)
+
         for p in postPermas:
-                url = URL + "/r/depression/comments/" + p + ".json"
+                url = URL  + postPermas[p] + ".json"
                 crawler = redditCrawler(50,300)
+                print("Getting thread from",url)
                 jsDict = crawler.getThread(url , p , postDir , save = True )
+                print(jsDict)
+                tId = p
+                if jsDict == None:
+                        continue
+                print ("Saving %s at %s",(tId,graphDir))
+                graph = crawler.parseRedditJsonConvTree(jsDict)
+                print(type(graph))
+                print(" Saving Graphs ")
+                # nxGraphDict[tId] = graph
+                graphPath = graphDir + str(tId) + '.pkl'
+                with open(graphPath,'wb') as fi:
+                        pkl.dump(graph,fi,protocol=pkl.HIGHEST_PROTOCOL)
+                print("Got %d Graphs now ",(len(nxGraphDict.keys())))
+        
+        # print("Created %d Graphs"%(len(nxGraphDict.keys())))
+        # finalFile = graphDir + graphFile
+        # with open(finalFile,'wb') as f:
+        #         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
+        print ("Done Saving !!!")
+        
+
+if __name__ == "__curated__":
+        parser = argparse.ArgumentParser(description='Instantiate crawler with a list of permalinks')
+        parser.add_argument('-p', help='Pickle file for the permalinks')
+        args = parser.parse_args()
+
+        print ("Creating graph from posts")
+        postDict = args.p
+        URL = "https://www.reddit.com"
+        nxGraphDict = {}
+        try:
+                postPermas = pkl.load(open(postDict,'rb'))
+                print ("Crawling :" , len(postPermas))
+        except:
+                print("The Pickled file you sent does not exist or is corrupt",postDict)
+                sys.exit()
+        
+        for p in postPermas:
+                url = URL  + postPermas[p] + ".json"
+                crawler = redditCrawler(50,300)
+                print("Getting thread from",url)
+                jsDict = crawler.getThread(url , p , postDir , save = True )
+                print(jsDict)
                 tId = p
                 if jsDict == None:
                         continue
