@@ -63,14 +63,17 @@ def getPostDumps(path):
 
 def getCrawledData(path):
     files = glob.glob(path + "*.pkl")
-    threads = [f.split('.')[0] for f in files]
+    threads = [f.split('/')[-1].split('.')[0] for f in files]
     return threads
 
 def getSubPostPermas(permaDict , crawledList):
     subDict = dict()
-    for k in permaDict:
-        if k not in crawledList:
-            subDict[k] = permaDict[k]
+    crawled = set(crawledList).intersection(permaDict.keys())
+    print("Already got ", len(crawled) , len(permaDict))
+    subset = list(set(permaDict.keys()).symmetric_difference(crawled))
+
+    for k in subset:
+        subDict[k] = permaDict[k]
     return subDict
 
 if __name__ == "__main__":
@@ -140,3 +143,15 @@ if __name__ == "__curated__":
         print ("Done Saving !!!")
 
 
+if __name__ == '__test__':
+    parser = argparse.ArgumentParser(description='Instantiate crawler with a list of permalinks')
+    parser.add_argument('-p', help='Pickle file for the permalinks')
+    args = parser.parse_args()
+
+    print ("Creating graph from posts")
+    postDict = args.p
+    Permas = pkl.load(open(postDict,'rb'))
+    alreadyCrawled = getCrawledData(graphDir)
+    print(len(alreadyCrawled))
+    postPermas = getSubPostPermas(Permas , alreadyCrawled)
+    print ("Crawling :" , len(postPermas))
