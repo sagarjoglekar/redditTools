@@ -61,11 +61,21 @@ def getPostDumps(path):
         paths += glob.glob(path+'/*.xz')
         return paths
 
+def getCrawledData(path):
+    files = glob.glob(path + "*.pkl")
+    threads = [f.split('.')[0] for f in files]
+    return threads
+
+def getSubPostPermas(permaDict , crawledList):
+    subDict = dict()
+    for k in permaDict:
+        if k not in crawledList:
+            subDict[k] = permaDict[k]
+    return subDict
 
 if __name__ == "__main__":
         print ("Creating graph from posts")
         URL = "https://www.reddit.com"
-        # nxGraphDict = {}
         dumpFiles = getPostDumps(dumpPath)
         print(dumpFiles)
         postPermas = getSubmissionPermalinks(dumpFiles[0],comments_Thresh= 10)
@@ -87,12 +97,6 @@ if __name__ == "__main__":
                 graphPath = graphDir + str(tId) + '.pkl'
                 with open(graphPath,'wb') as fi:
                         pkl.dump(graph,fi,protocol=pkl.HIGHEST_PROTOCOL)
-                print("Got %d Graphs now ",(len(nxGraphDict.keys())))
-        
-        # print("Created %d Graphs"%(len(nxGraphDict.keys())))
-        # finalFile = graphDir + graphFile
-        # with open(finalFile,'wb') as f:
-        #         pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
         print ("Done Saving !!!")
         
 
@@ -104,37 +108,35 @@ if __name__ == "__curated__":
         print ("Creating graph from posts")
         postDict = args.p
         URL = "https://www.reddit.com"
-        nxGraphDict = {}
         try:
-                postPermas = pkl.load(open(postDict,'rb'))
+                Permas = pkl.load(open(postDict,'rb'))
+                alreadyCrawled = getCrawledData(graphDir)
+                postPermas = getSubPostPermas(Permas , alreadyCrawled)
                 print ("Crawling :" , len(postPermas))
         except:
                 print("The Pickled file you sent does not exist or is corrupt",postDict)
                 sys.exit()
         
         for p in postPermas:
-                url = URL  + postPermas[p] + ".json"
-                crawler = redditCrawler(50,300)
-                print("Getting thread from",url)
-                jsDict = crawler.getThread(url , p , postDir , save = True )
-                print(jsDict)
-                tId = p
-                if jsDict == None:
-                        continue
-                print ("Saving %s at %s",(tId,graphDir))
-                graph = crawler.parseRedditJsonConvTree(jsDict)
-                print(type(graph))
-                print(" Saving Graphs ")
-                nxGraphDict[tId] = graph
-                graphPath = graphDir + str(tId) + '.pkl'
-                with open(graphPath,'wb') as fi:
-                        pkl.dump(graph,fi,protocol=pkl.HIGHEST_PROTOCOL)
-                print("Got %d Graphs now ",(len(nxGraphDict.keys())))
+                try:
+                    url = URL  + postPermas[p] + ".json"
+                    crawler = redditCrawler(50,300)
+                    print("Getting thread from",url)
+                    jsDict = crawler.getThread(url , p , postDir , save = True )
+                    print(jsDict)
+                    tId = p
+                    if jsDict == None:
+                            continue
+                    print ("Saving %s at %s",(tId,graphDir))
+                    graph = crawler.parseRedditJsonConvTree(jsDict)
+                    print(type(graph))
+                    print(" Saving Graphs ")
+                    graphPath = graphDir + str(tId) + '.pkl'
+                    with open(graphPath,'wb') as fi:
+                            pkl.dump(graph,fi,protocol=pkl.HIGHEST_PROTOCOL)
+                except:
+                    print("SomeThing went horribly wrong since you have an exception HERE!!")
         
-        print("Created %d Graphs"%(len(nxGraphDict.keys())))
-        finalFile = graphDir + graphFile
-        with open(finalFile,'wb') as f:
-                pkl.dump(nxGraphDict,f,protocol=pkl.HIGHEST_PROTOCOL)
         print ("Done Saving !!!")
 
 
