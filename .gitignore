@@ -1,6 +1,7 @@
 *.gexf
 *.tar.gz
 *.pkl
+*.csv
 Notebooks/SavedGraphs/
 Notebooks/SavedObjs/
 Notebooks/TopicModels/

@@ -12,9 +12,9 @@ import argparse
 import sys
 
 
-dumpPath = '/10TBdrive/datashare/Reddit/submissions/'
-graphDir = '/10TBdrive/datashare/Reddit/graphs/'
-postDir = '/10TBdrive/datashare/Reddit/crawls/'
+dumpPath = '/10TBdrive/datashare/geo_located_Reddit_crawl/yearlySubmissions/'
+graphDir = '/10TBdrive/datashare/geo_located_Reddit_crawl/graphs/'
+postDir = '/10TBdrive/datashare/geo_located_Reddit_crawl/posts/'
 graphFile = "January2017_atleast10comments.pkl"
 
 
