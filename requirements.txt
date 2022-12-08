@@ -1,4 +1,4 @@
-certifi==2018.4.16
+certifi==2022.12.7
 networkx==2.1
 pandas==0.23.0
 praw==5.4.0
